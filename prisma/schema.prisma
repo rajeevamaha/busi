@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String
+  planTier      String         @default("FREE") // FREE or PAID
+  createdAt     DateTime       @default(now())
+  businessPlans BusinessPlan[]
+}
+
+model BusinessPlan {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  businessType String        @default("bakery")
+  formData     Json          @default("{}")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  chatMessages ChatMessage[]
+
+  @@index([userId])
+}
+
+model ChatMessage {
+  id        String       @id @default(cuid())
+  planId    String
+  plan      BusinessPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  role      String       // "user" or "assistant"
+  content   String
+  modelUsed String?      // "haiku" or "sonnet"
+  createdAt DateTime     @default(now())
+
+  @@index([planId])
+}
+
+model Benchmark {
+  id                String @id @default(cuid())
+  category          String
+  businessType      String
+  healthyMin        Float
+  healthyMax        Float
+  warningThreshold  Float
+  criticalThreshold Float
+
+  @@unique([category, businessType])
+}
