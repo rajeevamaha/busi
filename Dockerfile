@@ -15,6 +15,11 @@ ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 RUN npx prisma generate
 RUN npm run build
 
+# Separate stage to install prisma CLI without polluting standalone output
+FROM base AS prisma-cli
+WORKDIR /prisma-cli
+RUN npm init -y && npm install prisma
+
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
@@ -28,12 +33,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Prisma: schema, migrations, generated client
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-# Install prisma CLI with all transitive deps for migrate deploy
-RUN npm install --no-save prisma
+# Prisma CLI in isolated directory (avoids corrupting standalone node_modules)
+COPY --from=prisma-cli /prisma-cli /prisma-cli
 
 USER nextjs
 EXPOSE 3000
