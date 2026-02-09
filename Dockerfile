@@ -39,6 +39,9 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 # Prisma CLI in isolated directory (avoids corrupting standalone node_modules)
 COPY --from=prisma-cli /prisma-cli /prisma-cli
 
+# Startup script
+COPY start.sh ./start.sh
+
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
