@@ -18,7 +18,7 @@ RUN npm run build
 # Separate stage to install prisma CLI without polluting standalone output
 FROM base AS prisma-cli
 WORKDIR /prisma-cli
-RUN npm init -y && npm install prisma
+RUN npm init -y && npm install prisma@6.19.2
 
 FROM base AS runner
 WORKDIR /app
