@@ -33,7 +33,7 @@ COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Install prisma CLI with all transitive deps for migrate deploy
-RUN npm install --no-save prisma dotenv
+RUN npm install --no-save prisma
 
 USER nextjs
 EXPOSE 3000
