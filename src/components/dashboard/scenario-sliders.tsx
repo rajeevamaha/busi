@@ -11,7 +11,6 @@ import { isSoloOrFamily, ScenarioOverrides } from '@/lib/engine/types';
 export function ScenarioSliders() {
   const setScenarioOverrides = useBusinessPlanStore((s) => s.setScenarioOverrides);
   const clearScenario = useBusinessPlanStore((s) => s.clearScenario);
-  const scenarioMetrics = useBusinessPlanStore((s) => s.scenarioMetrics);
   const formData = useFormData();
   const solo = isSoloOrFamily(formData.sectionA.teamSize);
 
@@ -46,11 +45,9 @@ export function ScenarioSliders() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold">What-If Scenarios</h3>
-        {scenarioMetrics && (
-          <Button variant="ghost" size="sm" onClick={handleReset}>
-            Reset
-          </Button>
-        )}
+        <Button variant="outline" size="sm" onClick={handleReset} className="text-xs h-7">
+          Reset to Original
+        </Button>
       </div>
 
       {sliders.map((s) => (
@@ -58,7 +55,7 @@ export function ScenarioSliders() {
           <div className="flex justify-between">
             <Label className="text-xs">{s.label}</Label>
             <span className="text-xs font-medium tabular-nums">
-              {s.unit === '$' ? (overrides[s.key] ?? 0 >= 0 ? '+' : '') : (overrides[s.key] ?? 0 >= 0 ? '+' : '')}
+              {(overrides[s.key] ?? 0) >= 0 ? '+' : ''}
               {s.unit === '$' ? `$${overrides[s.key] ?? 0}` : `${overrides[s.key] ?? 0}%`}
             </span>
           </div>
