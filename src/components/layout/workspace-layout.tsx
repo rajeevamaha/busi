@@ -23,7 +23,7 @@ export function WorkspaceLayout({ formPanel, dashboardPanel, chatPanel }: Worksp
 
   if (isMobile) {
     return (
-      <div className="h-[calc(100vh-3.5rem-3rem)]">
+      <div className="h-full">
         {activePanel === 'form' && formPanel}
         {activePanel === 'dashboard' && dashboardPanel}
         {activePanel === 'chat' && chatPanel}
@@ -32,7 +32,7 @@ export function WorkspaceLayout({ formPanel, dashboardPanel, chatPanel }: Worksp
   }
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)]">
+    <div className="flex h-full">
       {/* Form Panel */}
       <div className="w-[380px] min-w-[320px] border-r overflow-hidden">
         {formPanel}
