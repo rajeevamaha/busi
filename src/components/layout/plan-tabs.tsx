@@ -10,6 +10,7 @@ interface PlanTabsProps {
 const tabs = [
   { id: 'planner', label: 'Business Plan' },
   { id: 'bakers-ratio', label: "Baker's Ratio" },
+  { id: 'recipes', label: 'Recipes' },
   { id: 'resources', label: 'Resources' },
 ];
 

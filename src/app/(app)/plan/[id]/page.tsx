@@ -9,6 +9,7 @@ import { DashboardPanel } from '@/components/dashboard/dashboard-panel';
 import { ChatPanel } from '@/components/chat/chat-panel';
 import { PlanTabs } from '@/components/layout/plan-tabs';
 import { BakersRatioPage } from '@/components/bakers-ratio/bakers-ratio-page';
+import { RecipeBuilderPage } from '@/components/recipes/recipe-builder-page';
 import { ResourcesPage } from '@/components/resources/resources-page';
 import { defaultFormData, FormData } from '@/lib/engine/types';
 
@@ -69,6 +70,7 @@ export default function PlanPage() {
           />
         )}
         {activeTab === 'bakers-ratio' && <BakersRatioPage />}
+        {activeTab === 'recipes' && <RecipeBuilderPage />}
         {activeTab === 'resources' && <ResourcesPage />}
       </div>
     </div>

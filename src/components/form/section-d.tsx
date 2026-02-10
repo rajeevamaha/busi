@@ -34,6 +34,12 @@ export function SectionD({ register, errors }: Props) {
   const foodCostPercent = totalSales > 0 ? (totalPurchases / totalSales) * 100 : 0;
   const foodCostSeverity = foodCostPercent > 40 ? 'critical' : foodCostPercent > 33 ? 'warning' : 'healthy';
 
+  // Prime Cost = Food Cost (Purchases) + Labor Cost
+  const totalLaborCost = metrics.costs.totalLaborCost;
+  const primeCost = totalPurchases + totalLaborCost;
+  const primeCostPercent = totalSales > 0 ? (primeCost / totalSales) * 100 : 0;
+  const primeCostSeverity = primeCostPercent > 50 ? 'critical' : primeCostPercent > 45 ? 'warning' : 'healthy';
+
   return (
     <SectionWrapper title="D. Cost of Goods Sold (COGS)" description="Ingredient and packaging costs">
       <div className="grid gap-4 sm:grid-cols-2">
@@ -96,6 +102,16 @@ export function SectionD({ register, errors }: Props) {
           value={formatPercent(foodCostPercent)}
           suffix={`${formatCurrency(totalPurchases)} / ${formatCurrency(totalSales)}`}
           severity={foodCostSeverity as 'healthy' | 'warning' | 'critical'}
+        />
+        <CalculatedField
+          label="Prime Cost (Food + Labor)"
+          value={formatCurrency(primeCost)}
+          suffix={`${formatCurrency(totalPurchases)} + ${formatCurrency(totalLaborCost)}`}
+        />
+        <CalculatedField
+          label="Prime Cost % of Revenue"
+          value={formatPercent(primeCostPercent)}
+          severity={primeCostSeverity as 'healthy' | 'warning' | 'critical'}
         />
       </div>
     </SectionWrapper>
