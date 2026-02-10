@@ -64,7 +64,12 @@ export function PlanForm() {
           setValue={setValue as unknown as Parameters<typeof SectionA>[0]['setValue']}
           watch={watch as unknown as (name: string) => unknown}
         />
-        <SectionB register={register} errors={errors} />
+        <SectionB
+          register={register}
+          errors={errors}
+          setValue={setValue as unknown as Parameters<typeof SectionB>[0]['setValue']}
+          watch={watch as unknown as Parameters<typeof SectionB>[0]['watch']}
+        />
         <SectionC register={register} errors={errors} />
         <SectionD register={register} errors={errors} />
 

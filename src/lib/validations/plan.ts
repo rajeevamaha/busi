@@ -20,7 +20,16 @@ const revenueStreamSchema = z.object({
   monthlyRevenue: nonNegative,
 });
 
+const menuItemSchema = z.object({
+  name: z.string().max(100),
+  category: z.string().max(50),
+  price: nonNegative,
+  avgQtyPerOrder: nonNegative,
+});
+
 export const sectionBSchema = z.object({
+  pricingMode: z.enum(['manual', 'itemized']).default('manual'),
+  menuItems: z.array(menuItemSchema).default([]),
   avgSellingPrice: nonNegative.default(0),
   avgOrderValue: nonNegative.default(0),
   ordersPerDay: nonNegative.default(0),

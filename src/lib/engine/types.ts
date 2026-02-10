@@ -24,7 +24,16 @@ export interface RevenueStream {
   monthlyRevenue: number;
 }
 
+export interface MenuItem {
+  name: string;
+  category: string;
+  price: number;
+  avgQtyPerOrder: number;
+}
+
 export interface SectionB {
+  pricingMode: 'manual' | 'itemized';
+  menuItems: MenuItem[];
   avgSellingPrice: number;
   avgOrderValue: number;
   ordersPerDay: number;
@@ -240,6 +249,8 @@ export const defaultFormData: FormData = {
     operatingHoursPerDay: 10,
   },
   sectionB: {
+    pricingMode: 'manual',
+    menuItems: [],
     avgSellingPrice: 0,
     avgOrderValue: 0,
     ordersPerDay: 0,
