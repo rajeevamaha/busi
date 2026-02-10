@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { streamText, createUIMessageStreamResponse, convertToModelMessages } from 'ai';
+import { streamText, createUIMessageStreamResponse } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { withAuth, isAuthError } from '@/lib/middleware';
 import { prisma } from '@/lib/db';
@@ -46,15 +46,18 @@ export async function POST(req: NextRequest) {
   const alerts = runRules(formData, metrics);
   const insights = runCompoundRules(formData, metrics);
 
-  // Convert UIMessages to model messages for streamText
-  const modelMessages = convertToModelMessages(messages);
+  // Convert UIMessages (parts-based) to CoreMessages (content-based) for streamText
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const coreMessages = messages.map((msg: any) => ({
+    role: msg.role as 'user' | 'assistant',
+    content: msg.parts
+      ?.filter((p: { type: string }) => p.type === 'text')
+      .map((p: { text: string }) => p.text)
+      .join('') || msg.content || '',
+  }));
 
   // Route model based on last user message text
-  const lastMsg = messages[messages.length - 1];
-  const lastUserText = lastMsg?.parts
-    ?.filter((p: { type: string }) => p.type === 'text')
-    .map((p: { type: string; text?: string }) => p.text || '')
-    .join('') || '';
+  const lastUserText = coreMessages[coreMessages.length - 1]?.content || '';
   const modelChoice = routeModel(lastUserText);
   const modelId = getModelId(modelChoice);
 
@@ -63,7 +66,7 @@ export async function POST(req: NextRequest) {
   const result = streamText({
     model: anthropic(modelId),
     system: systemPrompt,
-    messages: modelMessages,
+    messages: coreMessages,
   });
 
   // Save messages asynchronously
