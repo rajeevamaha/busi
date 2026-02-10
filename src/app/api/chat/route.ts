@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { streamText, createUIMessageStreamResponse } from 'ai';
+import { streamText, createUIMessageStreamResponse, convertToModelMessages } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { withAuth, isAuthError } from '@/lib/middleware';
 import { prisma } from '@/lib/db';
@@ -46,9 +46,16 @@ export async function POST(req: NextRequest) {
   const alerts = runRules(formData, metrics);
   const insights = runCompoundRules(formData, metrics);
 
-  // Route model
-  const lastUserMessage = messages[messages.length - 1]?.content || '';
-  const modelChoice = routeModel(lastUserMessage);
+  // Convert UIMessages to model messages for streamText
+  const modelMessages = convertToModelMessages(messages);
+
+  // Route model based on last user message text
+  const lastMsg = messages[messages.length - 1];
+  const lastUserText = lastMsg?.parts
+    ?.filter((p: { type: string }) => p.type === 'text')
+    .map((p: { type: string; text?: string }) => p.text || '')
+    .join('') || '';
+  const modelChoice = routeModel(lastUserText);
   const modelId = getModelId(modelChoice);
 
   const systemPrompt = buildSystemPrompt(formData, metrics, alerts, insights);
@@ -56,22 +63,19 @@ export async function POST(req: NextRequest) {
   const result = streamText({
     model: anthropic(modelId),
     system: systemPrompt,
-    messages,
+    messages: modelMessages,
   });
 
   // Save messages asynchronously
-  if (planId) {
-    const userMsg = messages[messages.length - 1];
-    if (userMsg) {
-      prisma.chatMessage.create({
-        data: {
-          planId,
-          role: 'user',
-          content: userMsg.content || '',
-          modelUsed: modelChoice,
-        },
-      }).catch(console.error);
-    }
+  if (planId && lastUserText) {
+    prisma.chatMessage.create({
+      data: {
+        planId,
+        role: 'user',
+        content: lastUserText,
+        modelUsed: modelChoice,
+      },
+    }).catch(console.error);
   }
 
   return createUIMessageStreamResponse({
