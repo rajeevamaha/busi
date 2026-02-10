@@ -20,12 +20,12 @@ const severityColors: Record<AlertSeverity, string> = {
 export function CalculatedField({ label, value, severity, suffix }: CalculatedFieldProps) {
   return (
     <div className="flex items-center justify-between rounded-md bg-muted/50 px-3 py-2">
-      <Label className="text-sm text-muted-foreground">{label}</Label>
+      <div>
+        <Label className="text-sm text-muted-foreground">{label}</Label>
+        {suffix && <p className="text-xs text-muted-foreground/70">{suffix}</p>}
+      </div>
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">
-          {value}
-          {suffix && <span className="text-muted-foreground ml-1">{suffix}</span>}
-        </span>
+        <span className="text-sm font-medium">{value}</span>
         {severity && severity !== 'healthy' && (
           <Badge variant="outline" className={severityColors[severity]}>
             {severity}

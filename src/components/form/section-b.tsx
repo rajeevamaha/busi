@@ -20,18 +20,28 @@ export function SectionB({ register, errors }: Props) {
   return (
     <SectionWrapper title="B. Revenue & Demand" description="Your sales and pricing">
       <div className="grid gap-4 sm:grid-cols-2">
-        <CurrencyInput<FormData>
-          label="Average Selling Price / Item"
-          name="sectionB.avgSellingPrice"
-          register={register}
-          error={errors.sectionB?.avgSellingPrice?.message}
-        />
-        <CurrencyInput<FormData>
-          label="Average Order Value (AOV)"
-          name="sectionB.avgOrderValue"
-          register={register}
-          error={errors.sectionB?.avgOrderValue?.message}
-        />
+        <div>
+          <CurrencyInput<FormData>
+            label="Average Selling Price / Item"
+            name="sectionB.avgSellingPrice"
+            register={register}
+            error={errors.sectionB?.avgSellingPrice?.message}
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Sum of all item prices ÷ number of items. E.g. if you sell 3 items at $10, $15, $20 → ASP = $15
+          </p>
+        </div>
+        <div>
+          <CurrencyInput<FormData>
+            label="Average Order Value (AOV)"
+            name="sectionB.avgOrderValue"
+            register={register}
+            error={errors.sectionB?.avgOrderValue?.message}
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            AOV = ASP × items per order. If customers buy 2 items on avg at $15 each → AOV = $30
+          </p>
+        </div>
         <NumberInput<FormData>
           label="Orders per Day"
           name="sectionB.ordersPerDay"

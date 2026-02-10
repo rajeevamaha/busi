@@ -25,32 +25,30 @@ export function SectionD({ register, errors }: Props) {
         : 'healthy'
     : undefined;
 
+  const { sectionA, sectionB, sectionD } = formData;
+  const monthlyUnits = sectionB.unitsProducedPerDay * sectionA.operatingDaysPerMonth;
+  const autoRawMaterialCost = sectionD.ingredientCostPerUnit * monthlyUnits;
+  const autoPackagingCost = sectionD.packagingCostPerUnit * monthlyUnits;
+
   return (
     <SectionWrapper title="D. Cost of Goods Sold (COGS)" description="Ingredient and packaging costs">
       <div className="grid gap-4 sm:grid-cols-2">
-        <CurrencyInput<FormData>
-          label="Ingredient Cost per Unit"
-          name="sectionD.ingredientCostPerUnit"
-          register={register}
-          error={errors.sectionD?.ingredientCostPerUnit?.message}
-        />
+        <div>
+          <CurrencyInput<FormData>
+            label="Ingredient Cost per Unit"
+            name="sectionD.ingredientCostPerUnit"
+            register={register}
+            error={errors.sectionD?.ingredientCostPerUnit?.message}
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Cost of ingredients for one sellable unit (not the whole batch)
+          </p>
+        </div>
         <CurrencyInput<FormData>
           label="Packaging Cost per Unit"
           name="sectionD.packagingCostPerUnit"
           register={register}
           error={errors.sectionD?.packagingCostPerUnit?.message}
-        />
-        <CurrencyInput<FormData>
-          label="Monthly Raw Material Cost"
-          name="sectionD.monthlyRawMaterialCost"
-          register={register}
-          error={errors.sectionD?.monthlyRawMaterialCost?.message}
-        />
-        <CurrencyInput<FormData>
-          label="Packaging Cost (monthly)"
-          name="sectionD.packagingCostMonthly"
-          register={register}
-          error={errors.sectionD?.packagingCostMonthly?.message}
         />
         <PercentageInput<FormData>
           label="Wastage Estimate"
@@ -62,6 +60,16 @@ export function SectionD({ register, errors }: Props) {
       </div>
 
       <div className="mt-4 space-y-2">
+        <CalculatedField
+          label="Monthly Raw Material Cost"
+          value={formatCurrency(autoRawMaterialCost)}
+          suffix={`${sectionD.ingredientCostPerUnit} × ${monthlyUnits} units`}
+        />
+        <CalculatedField
+          label="Monthly Packaging Cost"
+          value={formatCurrency(autoPackagingCost)}
+          suffix={`${sectionD.packagingCostPerUnit} × ${monthlyUnits} units`}
+        />
         <CalculatedField
           label="COGS per Unit"
           value={formatCurrency(metrics.costs.cogsPerUnit)}
