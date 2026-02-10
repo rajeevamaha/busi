@@ -4,6 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { HealthScoreGauge } from './health-score-gauge';
+import { InsightsCarousel } from './insights-carousel';
 import { CostDonutChart } from './cost-donut-chart';
 import { PnlTable } from './pnl-table';
 import { BenchmarkGrid } from './benchmark-grid';
@@ -37,7 +38,10 @@ export function DashboardPanel() {
           </Card>
         )}
 
-        <HealthScoreGauge />
+        <div className="flex gap-4 items-stretch">
+          <HealthScoreGauge />
+          <InsightsCarousel />
+        </div>
 
         <Separator />
 
