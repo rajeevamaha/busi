@@ -13,9 +13,8 @@ export function routeModel(userMessage: string): ModelChoice {
   return isComplex ? 'smart' : 'fast';
 }
 
-// Provider: google (Gemini) — free tier
-// fast = Gemini 2.0 Flash (free, fast)
-// smart = Gemini 2.0 Flash (same model, free)
+// Provider: Groq — free tier (30 RPM, 14,400 req/day)
+// Uses Llama 3.3 70B — fast and capable
 export function getModelId(model: ModelChoice): string {
-  return model === 'smart' ? 'gemini-2.0-flash' : 'gemini-2.0-flash';
+  return model === 'smart' ? 'llama-3.3-70b-versatile' : 'llama-3.3-70b-versatile';
 }
