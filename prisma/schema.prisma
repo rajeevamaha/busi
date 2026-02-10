@@ -27,8 +27,30 @@ model BusinessPlan {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   chatMessages ChatMessage[]
+  recipes      Recipe[]
 
   @@index([userId])
+}
+
+model Recipe {
+  id              String       @id @default(cuid())
+  planId          String
+  plan            BusinessPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  name            String
+  category        String       @default("other")
+  yieldAmount     String       @default("")
+  yieldUnit       String       @default("pieces")
+  prepTime        Int          @default(0)
+  bakeTime        Int          @default(0)
+  temperature     Int          @default(350)
+  temperatureUnit String       @default("F")
+  ingredients     Json         @default("[]")
+  instructions    String       @default("")
+  notes           String       @default("")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([planId])
 }
 
 model ChatMessage {

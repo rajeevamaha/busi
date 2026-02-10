@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useBusinessPlanStore } from '@/stores/business-plan-store';
@@ -31,62 +31,91 @@ export interface Recipe {
   createdAt: string;
 }
 
-const STORAGE_KEY_PREFIX = 'busibldr-recipes-';
-
-function getStorageKey(planId: string) {
-  return `${STORAGE_KEY_PREFIX}${planId}`;
+function getToken() {
+  return localStorage.getItem('token') || '';
 }
 
 export function RecipeBuilderPage() {
   const planId = useBusinessPlanStore((s) => s.planId);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [viewingRecipe, setViewingRecipe] = useState<Recipe | null>(null);
 
-  // Load recipes from localStorage
-  useEffect(() => {
+  const fetchRecipes = useCallback(async () => {
     if (!planId) return;
-    const stored = localStorage.getItem(getStorageKey(planId));
-    if (stored) {
-      try {
-        setRecipes(JSON.parse(stored));
-      } catch {
-        setRecipes([]);
+    try {
+      const res = await fetch(`/api/recipes?planId=${planId}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setRecipes(data.recipes);
       }
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false);
     }
   }, [planId]);
 
-  // Save recipes to localStorage
-  function saveRecipes(updated: Recipe[]) {
-    setRecipes(updated);
-    if (planId) {
-      localStorage.setItem(getStorageKey(planId), JSON.stringify(updated));
-    }
-  }
+  useEffect(() => {
+    fetchRecipes();
+  }, [fetchRecipes]);
 
-  function handleAddRecipe(recipe: Omit<Recipe, 'id' | 'createdAt'>) {
-    const newRecipe: Recipe = {
-      ...recipe,
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-    };
-    saveRecipes([newRecipe, ...recipes]);
+  async function handleAddRecipe(recipe: Omit<Recipe, 'id' | 'createdAt'>) {
+    const res = await fetch('/api/recipes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify({ planId, ...recipe }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setRecipes((prev) => [data.recipe, ...prev]);
+    }
     setShowAddDialog(false);
   }
 
-  function handleUpdateRecipe(recipe: Omit<Recipe, 'id' | 'createdAt'>) {
+  async function handleUpdateRecipe(recipe: Omit<Recipe, 'id' | 'createdAt'>) {
     if (!editingRecipe) return;
-    const updated = recipes.map((r) =>
-      r.id === editingRecipe.id ? { ...r, ...recipe } : r
-    );
-    saveRecipes(updated);
+    const res = await fetch(`/api/recipes/${editingRecipe.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify(recipe),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setRecipes((prev) =>
+        prev.map((r) => (r.id === editingRecipe.id ? data.recipe : r))
+      );
+    }
     setEditingRecipe(null);
   }
 
-  function handleDeleteRecipe(id: string) {
-    saveRecipes(recipes.filter((r) => r.id !== id));
+  async function handleDeleteRecipe(id: string) {
+    const res = await fetch(`/api/recipes/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    if (res.ok) {
+      setRecipes((prev) => prev.filter((r) => r.id !== id));
+    }
     setViewingRecipe(null);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-7rem)]">
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
   return (
@@ -133,7 +162,6 @@ export function RecipeBuilderPage() {
           </div>
         )}
 
-        {/* Add Recipe Dialog */}
         <RecipeDialog
           open={showAddDialog}
           onOpenChange={setShowAddDialog}
@@ -141,7 +169,6 @@ export function RecipeBuilderPage() {
           title="Add New Recipe"
         />
 
-        {/* Edit Recipe Dialog */}
         <RecipeDialog
           open={!!editingRecipe}
           onOpenChange={(open) => { if (!open) setEditingRecipe(null); }}
@@ -150,7 +177,6 @@ export function RecipeBuilderPage() {
           defaultValues={editingRecipe ?? undefined}
         />
 
-        {/* View Recipe Detail Dialog */}
         <RecipeDetailDialog
           recipe={viewingRecipe}
           open={!!viewingRecipe}
