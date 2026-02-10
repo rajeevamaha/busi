@@ -29,6 +29,10 @@ export function SectionD({ register, errors }: Props) {
   const monthlyUnits = sectionB.unitsProducedPerDay * sectionA.operatingDaysPerMonth;
   const autoRawMaterialCost = sectionD.ingredientCostPerUnit * monthlyUnits;
   const autoPackagingCost = sectionD.packagingCostPerUnit * monthlyUnits;
+  const totalPurchases = autoRawMaterialCost + autoPackagingCost;
+  const totalSales = metrics.revenue.totalRevenue;
+  const foodCostPercent = totalSales > 0 ? (totalPurchases / totalSales) * 100 : 0;
+  const foodCostSeverity = foodCostPercent > 40 ? 'critical' : foodCostPercent > 33 ? 'warning' : 'healthy';
 
   return (
     <SectionWrapper title="D. Cost of Goods Sold (COGS)" description="Ingredient and packaging costs">
@@ -86,6 +90,12 @@ export function SectionD({ register, errors }: Props) {
         <CalculatedField
           label="Wastage Cost"
           value={formatCurrency(metrics.costs.wastageCost)}
+        />
+        <CalculatedField
+          label="Food Cost % (Purchases / Sales)"
+          value={formatPercent(foodCostPercent)}
+          suffix={`${formatCurrency(totalPurchases)} / ${formatCurrency(totalSales)}`}
+          severity={foodCostSeverity as 'healthy' | 'warning' | 'critical'}
         />
       </div>
     </SectionWrapper>
