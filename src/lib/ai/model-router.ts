@@ -5,12 +5,17 @@ const COMPLEX_KEYWORDS = [
   'restructure', 'pivot', 'expansion',
 ];
 
-export function routeModel(userMessage: string): 'haiku' | 'sonnet' {
+export type ModelChoice = 'fast' | 'smart';
+
+export function routeModel(userMessage: string): ModelChoice {
   const lower = userMessage.toLowerCase();
   const isComplex = COMPLEX_KEYWORDS.some((kw) => lower.includes(kw));
-  return isComplex ? 'sonnet' : 'haiku';
+  return isComplex ? 'smart' : 'fast';
 }
 
-export function getModelId(model: 'haiku' | 'sonnet'): string {
-  return model === 'sonnet' ? 'claude-sonnet-4-5-20250929' : 'claude-haiku-4-5-20251001';
+// Provider: google (Gemini) — free tier
+// fast = Gemini 2.0 Flash (free, fast)
+// smart = Gemini 2.0 Flash (same model, free)
+export function getModelId(model: ModelChoice): string {
+  return model === 'smart' ? 'gemini-2.0-flash' : 'gemini-2.0-flash';
 }

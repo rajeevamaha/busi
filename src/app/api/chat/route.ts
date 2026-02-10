@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { streamText, createUIMessageStreamResponse } from 'ai';
-import { anthropic } from '@ai-sdk/anthropic';
+import { google } from '@ai-sdk/google';
 import { withAuth, isAuthError } from '@/lib/middleware';
 import { prisma } from '@/lib/db';
 import { buildSystemPrompt } from '@/lib/ai/prompt-builder';
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
   const systemPrompt = buildSystemPrompt(formData, metrics, alerts, insights);
 
   const result = streamText({
-    model: anthropic(modelId),
+    model: google(modelId),
     system: systemPrompt,
     messages: coreMessages,
   });
