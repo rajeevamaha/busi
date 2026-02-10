@@ -20,57 +20,59 @@ export function HealthScoreGauge() {
   const label = getLabel(score);
 
   // SVG circular gauge
-  const radius = 70;
+  const size = 120;
+  const center = size / 2;
+  const radius = 46;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - score / 100);
 
   return (
-    <div className="flex flex-col items-center">
-      <svg width="180" height="180" viewBox="0 0 180 180">
+    <div className="flex flex-col items-center justify-center">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         {/* Background circle */}
         <circle
-          cx="90"
-          cy="90"
+          cx={center}
+          cy={center}
           r={radius}
           fill="none"
           stroke="#e5e7eb"
-          strokeWidth="12"
+          strokeWidth="10"
         />
         {/* Score arc */}
         <circle
-          cx="90"
-          cy="90"
+          cx={center}
+          cy={center}
           r={radius}
           fill="none"
           stroke={color}
-          strokeWidth="12"
+          strokeWidth="10"
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
-          transform="rotate(-90 90 90)"
+          transform={`rotate(-90 ${center} ${center})`}
           className="transition-all duration-700 ease-out"
         />
         {/* Score text */}
         <text
-          x="90"
-          y="82"
+          x={center}
+          y={center - 4}
           textAnchor="middle"
-          className="text-3xl font-bold"
+          className="text-2xl font-bold"
           fill={color}
         >
           {score}
         </text>
         <text
-          x="90"
-          y="104"
+          x={center}
+          y={center + 14}
           textAnchor="middle"
-          className="text-sm"
+          className="text-[10px]"
           fill="#6b7280"
         >
           {label}
         </text>
       </svg>
-      <p className="text-sm font-medium mt-1">Business Health Score</p>
+      <p className="text-xs font-medium text-muted-foreground mt-0.5">Health Score</p>
     </div>
   );
 }

@@ -28,9 +28,9 @@ export function ChatPanel() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="border-b px-4 py-2">
-        <h2 className="text-lg font-semibold">AI Advisor</h2>
-        <p className="text-xs text-muted-foreground">Powered by Claude</p>
+      <div className="border-b px-4 py-3">
+        <h2 className="text-sm font-semibold">AI Advisor</h2>
+        <p className="text-[10px] text-muted-foreground">Ask questions about your business plan</p>
       </div>
 
       <ChatMessages messages={messages} isLoading={isLoading} />

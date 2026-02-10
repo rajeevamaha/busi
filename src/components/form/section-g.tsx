@@ -13,7 +13,7 @@ interface Props {
 export function SectionG({ register, errors }: Props) {
   return (
     <SectionWrapper title="G. Other Operating Expenses" description="Licenses, insurance, tech, loans">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <CurrencyInput<FormData>
           label="Licenses & Permits (monthly)"
           name="sectionG.licensesPermits"

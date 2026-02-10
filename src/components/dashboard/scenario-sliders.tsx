@@ -42,9 +42,9 @@ export function ScenarioSliders() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold">What-If Scenarios</h3>
+        <h3 className="text-xs font-semibold">What-If Scenarios</h3>
         <Button variant="outline" size="sm" onClick={handleReset} className="text-xs h-7">
           Reset to Original
         </Button>

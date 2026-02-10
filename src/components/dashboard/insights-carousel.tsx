@@ -55,8 +55,8 @@ export function InsightsCarousel() {
         <Badge variant="outline" className={badgeClass}>{badgeLabel}</Badge>
         <span className="text-xs text-muted-foreground">{index + 1} / {total}</span>
       </div>
-      <div className="flex-1 px-3 py-2 overflow-y-auto">
-        <p className="text-sm">{current.message}</p>
+      <div className="flex-1 px-3 py-1.5 overflow-y-auto">
+        <p className="text-xs leading-relaxed">{current.message}</p>
         {current.type === 'alert' && current.recommendations.length > 0 && (
           <ul className="mt-1.5 space-y-0.5">
             {current.recommendations.map((rec, i) => (

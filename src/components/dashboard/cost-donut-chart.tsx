@@ -24,22 +24,22 @@ export function CostDonutChart() {
 
   if (data.length === 0 || metrics.revenue.totalRevenue === 0) {
     return (
-      <div className="flex h-[250px] items-center justify-center text-sm text-muted-foreground">
+      <div className="flex h-[200px] items-center justify-center text-xs text-muted-foreground">
         Enter revenue data to see cost breakdown
       </div>
     );
   }
 
   return (
-    <div className="h-[280px]">
+    <div className="h-[240px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={data}
             cx="50%"
-            cy="50%"
-            innerRadius={50}
-            outerRadius={80}
+            cy="45%"
+            innerRadius={42}
+            outerRadius={68}
             paddingAngle={2}
             dataKey="value"
           >

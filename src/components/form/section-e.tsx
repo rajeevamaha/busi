@@ -27,7 +27,7 @@ export function SectionE({ register, errors }: Props) {
 
   return (
     <SectionWrapper title="E. Labor & Staffing" description="Employee costs and capacity">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <NumberInput<FormData>
           label="Number of Employees"
           name="sectionE.numberOfEmployees"
@@ -67,7 +67,7 @@ export function SectionE({ register, errors }: Props) {
         />
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-3 space-y-1.5">
         <CalculatedField
           label="Total Labor Cost"
           value={formatCurrency(metrics.costs.totalLaborCost)}

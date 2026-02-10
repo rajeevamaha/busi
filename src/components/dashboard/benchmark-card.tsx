@@ -21,13 +21,13 @@ export function BenchmarkCard({ label, value, healthyRange, severity }: Benchmar
   const styles = severityStyles[severity];
 
   return (
-    <Card className={`p-3 ${styles.bg} ${styles.border} border`}>
-      <div className="flex items-center gap-2 mb-1">
-        <div className={`w-2 h-2 rounded-full ${styles.dot}`} />
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
+    <Card className={`p-2.5 ${styles.bg} ${styles.border} border gap-0`}>
+      <div className="flex items-center gap-1.5 mb-0.5">
+        <div className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} />
+        <span className="text-[10px] font-medium text-muted-foreground">{label}</span>
       </div>
-      <p className="text-lg font-bold">{formatPercent(value)}</p>
-      <p className="text-xs text-muted-foreground">Healthy: {healthyRange}</p>
+      <p className="text-sm font-bold">{formatPercent(value)}</p>
+      <p className="text-[10px] text-muted-foreground">Healthy: {healthyRange}</p>
     </Card>
   );
 }

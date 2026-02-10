@@ -27,7 +27,7 @@ export function SectionC({ register, errors }: Props) {
 
   return (
     <SectionWrapper title="C. Rent & Fixed Costs" description="Your occupancy costs">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <CurrencyInput<FormData>
           label="Monthly Rent"
           name="sectionC.monthlyRent"
@@ -54,7 +54,7 @@ export function SectionC({ register, errors }: Props) {
         />
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-3 space-y-1.5">
         <CalculatedField
           label="Total Occupancy Cost"
           value={formatCurrency(metrics.costs.totalOccupancyCost)}

@@ -16,26 +16,26 @@ export function OwnersDrawCard() {
   const canMeetTarget = ownerDraw.sustainableMonthlyDraw >= targetDraw && targetDraw > 0;
 
   return (
-    <Card className={canMeetTarget ? 'border-green-200 bg-green-50' : 'border-yellow-200 bg-yellow-50'}>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm">Owner&apos;s Draw</CardTitle>
+    <Card className={`py-3 gap-2 ${canMeetTarget ? 'border-green-200 bg-green-50' : 'border-yellow-200 bg-yellow-50'}`}>
+      <CardHeader className="pb-0 px-4">
+        <CardTitle className="text-xs">Owner&apos;s Draw</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="flex justify-between text-sm">
+      <CardContent className="space-y-1.5 px-4">
+        <div className="flex justify-between text-xs">
           <span className="text-muted-foreground">Sustainable Draw</span>
-          <span className="font-bold text-lg">{formatCurrency(ownerDraw.sustainableMonthlyDraw)}</span>
+          <span className="font-bold text-sm">{formatCurrency(ownerDraw.sustainableMonthlyDraw)}</span>
         </div>
         {targetDraw > 0 && (
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Your Target</span>
             <span>{formatCurrency(targetDraw)}</span>
           </div>
         )}
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-xs">
           <span className="text-muted-foreground">Reinvestment Reserve</span>
           <span>{formatCurrency(ownerDraw.reinvestmentReserve)}</span>
         </div>
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-xs">
           <span className="text-muted-foreground">Draw % of Revenue</span>
           <span>{formatPercent(ownerDraw.drawPercentOfRevenue)}</span>
         </div>

@@ -12,9 +12,9 @@ function Row({ label, value, bold, indent, highlight }: {
   highlight?: 'green' | 'red';
 }) {
   return (
-    <div className={`flex justify-between py-1.5 px-2 ${bold ? 'font-semibold' : ''} ${indent ? 'pl-6' : ''} ${highlight === 'green' ? 'text-green-600' : highlight === 'red' ? 'text-red-600' : ''}`}>
-      <span className="text-sm">{label}</span>
-      <span className="text-sm tabular-nums">{value}</span>
+    <div className={`flex justify-between py-1 px-2 ${bold ? 'font-semibold' : ''} ${indent ? 'pl-5' : ''} ${highlight === 'green' ? 'text-green-600' : highlight === 'red' ? 'text-red-600' : ''}`}>
+      <span className="text-xs">{label}</span>
+      <span className="text-xs tabular-nums">{value}</span>
     </div>
   );
 }
@@ -26,7 +26,7 @@ export function PnlTable() {
 
   return (
     <div className="space-y-0.5">
-      <h3 className="text-sm font-semibold mb-2">Profit & Loss Summary</h3>
+      <h3 className="text-xs font-semibold mb-1.5">Profit & Loss Summary</h3>
       <Row label="Revenue" value={formatCurrency(metrics.revenue.totalRevenue)} bold />
       <div className="border-t my-1" />
       <Row label="COGS" value={`(${formatCurrency(metrics.costs.totalCogs)})`} indent />

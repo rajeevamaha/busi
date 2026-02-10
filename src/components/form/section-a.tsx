@@ -27,20 +27,21 @@ export function SectionA({ register, errors, setValue, watch }: Props) {
 
   return (
     <SectionWrapper title="A. Business Basics" description="Tell us about your business">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">
-          <Label htmlFor="sectionA.businessName" className="text-sm">Business Name</Label>
+          <Label htmlFor="sectionA.businessName" className="text-xs text-muted-foreground">Business Name</Label>
           <Input
             id="sectionA.businessName"
             placeholder="My Bakery"
+            className="h-8"
             {...register('sectionA.businessName')}
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-sm">Business Type</Label>
+          <Label className="text-xs text-muted-foreground">Business Type</Label>
           <Select value={businessType} onValueChange={(v) => setValue('sectionA.businessType', v)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-8">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -54,9 +55,9 @@ export function SectionA({ register, errors, setValue, watch }: Props) {
         </div>
 
         <div className="space-y-1">
-          <Label className="text-sm">Team Size</Label>
+          <Label className="text-xs text-muted-foreground">Team Size</Label>
           <Select value={teamSize} onValueChange={(v) => setValue('sectionA.teamSize', v)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-8">
               <SelectValue placeholder="Select size" />
             </SelectTrigger>
             <SelectContent>
@@ -69,10 +70,11 @@ export function SectionA({ register, errors, setValue, watch }: Props) {
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="sectionA.city" className="text-sm">City / Location</Label>
+          <Label htmlFor="sectionA.city" className="text-xs text-muted-foreground">City / Location</Label>
           <Input
             id="sectionA.city"
             placeholder="New York, NY"
+            className="h-8"
             {...register('sectionA.city')}
           />
         </div>

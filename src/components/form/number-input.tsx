@@ -27,7 +27,7 @@ export function NumberInput<T extends FieldValues>({
 }: NumberInputProps<T>) {
   return (
     <div className="space-y-1">
-      <Label htmlFor={name} className="text-sm">
+      <Label htmlFor={name} className="text-xs text-muted-foreground">
         {label}
       </Label>
       <Input
@@ -37,6 +37,7 @@ export function NumberInput<T extends FieldValues>({
         min={min}
         max={max}
         placeholder={placeholder}
+        className="h-8"
         {...register(name, { valueAsNumber: true })}
       />
       {error && <p className="text-xs text-red-500">{error}</p>}

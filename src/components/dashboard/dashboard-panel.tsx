@@ -22,19 +22,19 @@ export function DashboardPanel() {
 
   return (
     <ScrollArea className="h-full">
-      <div className="p-4 pb-8 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Dashboard</h2>
+      <div className="p-4 pb-8 space-y-3">
+        <div className="flex items-center justify-between border-b pb-3 -mx-4 px-4 mb-1">
+          <h2 className="text-sm font-semibold">Dashboard</h2>
           <ExportPdfButton />
         </div>
 
         {scenarioMetrics && (
-          <Card className="border-blue-200 bg-blue-50">
-            <CardContent className="p-3">
-              <p className="text-xs font-medium text-blue-600">
+          <Card className="border-blue-200 bg-blue-50 py-2 gap-0">
+            <CardContent className="px-3">
+              <p className="text-[10px] font-medium text-blue-600">
                 Showing scenario results. Adjust sliders below or reset.
               </p>
-              <div className="flex gap-4 mt-2 text-sm">
+              <div className="flex gap-3 mt-1 text-xs">
                 <span>Net Profit: <strong>{formatCurrency(scenarioMetrics.profitability.netProfit)}</strong></span>
                 <span>Score: <strong>{scenarioMetrics.healthScore}</strong></span>
               </div>
@@ -42,47 +42,47 @@ export function DashboardPanel() {
           </Card>
         )}
 
-        <div className="flex gap-4 items-stretch">
+        <div className="flex gap-3 items-stretch">
           <HealthScoreGauge />
           <InsightsCarousel />
         </div>
 
         <Separator />
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Cost Breakdown</CardTitle>
+        <Card className="py-3 gap-2">
+          <CardHeader className="pb-0 px-4">
+            <CardTitle className="text-xs">Cost Breakdown</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4">
             <CostDonutChart />
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-4">
+        <Card className="py-3 gap-2">
+          <CardContent className="px-4">
             <PnlTable />
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Benchmarks</CardTitle>
+        <Card className="py-3 gap-2">
+          <CardHeader className="pb-0 px-4">
+            <CardTitle className="text-xs">Benchmarks</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4">
             <BenchmarkGrid />
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-4">
+        <Card className="py-3 gap-2">
+          <CardContent className="px-4">
             <BreakEvenBar />
           </CardContent>
         </Card>
 
         <OwnersDrawCard />
 
-        <Card>
-          <CardContent className="pt-4">
+        <Card className="py-3 gap-2">
+          <CardContent className="px-4">
             <ScenarioSliders />
           </CardContent>
         </Card>

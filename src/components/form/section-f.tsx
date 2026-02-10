@@ -26,7 +26,7 @@ export function SectionF({ register, errors }: Props) {
 
   return (
     <SectionWrapper title="F. Marketing" description="Advertising and platform costs">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <CurrencyInput<FormData>
           label="Monthly Marketing Spend"
           name="sectionF.monthlyMarketingSpend"
@@ -47,7 +47,7 @@ export function SectionF({ register, errors }: Props) {
         />
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-3 space-y-1.5">
         <CalculatedField
           label="Marketing % of Revenue"
           value={formatPercent(metrics.costs.marketingPercent)}

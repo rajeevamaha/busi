@@ -124,7 +124,7 @@ export function SectionB({ register, errors, setValue, watch }: Props) {
 
       {pricingMode === 'manual' ? (
         /* Manual mode — existing fields */
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <CurrencyInput<FormData>
               label="Average Selling Price / Item"
@@ -160,24 +160,24 @@ export function SectionB({ register, errors, setValue, watch }: Props) {
           </div>
 
           {/* Item list header */}
-          <div className="grid grid-cols-[1fr_90px_70px_60px_28px] gap-2 text-[10px] font-medium text-muted-foreground px-1">
+          <div className="grid grid-cols-[1fr_78px_58px_46px_24px] gap-1.5 text-[10px] font-medium text-muted-foreground px-0.5">
             <span>Item Name</span>
             <span>Category</span>
-            <span>Price ($)</span>
-            <span>Avg Qty</span>
+            <span>Price</span>
+            <span>Qty</span>
             <span></span>
           </div>
 
           {items.map((item, i) => (
-            <div key={i} className="grid grid-cols-[1fr_90px_70px_60px_28px] gap-2 items-center">
+            <div key={i} className="grid grid-cols-[1fr_78px_58px_46px_24px] gap-1.5 items-center">
               <Input
                 value={item.name}
                 onChange={(e) => updateItem(i, 'name', e.target.value)}
-                placeholder="e.g., Sourdough"
-                className="h-8 text-sm"
+                placeholder="Sourdough"
+                className="h-7 text-xs px-2"
               />
               <Select value={item.category} onValueChange={(v) => updateItem(i, 'category', v)}>
-                <SelectTrigger className="h-8 text-[11px] w-full">
+                <SelectTrigger className="h-7 text-[10px] px-1.5">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -192,8 +192,8 @@ export function SectionB({ register, errors, setValue, watch }: Props) {
                 step="0.01"
                 value={item.price || ''}
                 onChange={(e) => updateItem(i, 'price', parseFloat(e.target.value) || 0)}
-                placeholder="15.00"
-                className="h-8 text-sm"
+                placeholder="15"
+                className="h-7 text-xs px-2"
               />
               <Input
                 type="number"
@@ -202,14 +202,14 @@ export function SectionB({ register, errors, setValue, watch }: Props) {
                 value={item.avgQtyPerOrder || ''}
                 onChange={(e) => updateItem(i, 'avgQtyPerOrder', parseFloat(e.target.value) || 0)}
                 placeholder="1"
-                className="h-8 text-sm"
+                className="h-7 text-xs px-2"
               />
               <button
                 type="button"
                 onClick={() => removeItem(i)}
-                className="p-1 text-muted-foreground hover:text-red-600"
+                className="p-0.5 text-muted-foreground hover:text-red-600"
               >
-                <Trash2 className="size-3.5" />
+                <Trash2 className="size-3" />
               </button>
             </div>
           ))}
@@ -239,7 +239,7 @@ export function SectionB({ register, errors, setValue, watch }: Props) {
       )}
 
       {/* Common fields for both modes */}
-      <div className="grid gap-4 sm:grid-cols-2 mt-4">
+      <div className="grid gap-3 sm:grid-cols-2 mt-3">
         <NumberInput<FormData>
           label="Orders per Day"
           name="sectionB.ordersPerDay"
@@ -268,9 +268,9 @@ export function SectionB({ register, errors, setValue, watch }: Props) {
         )}
       </div>
 
-      <div className="mt-4 space-y-2">
-        <h4 className="text-sm font-medium text-muted-foreground">Historical Revenue (optional)</h4>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div className="mt-3 space-y-2">
+        <h4 className="text-xs font-medium text-muted-foreground">Historical Revenue (optional)</h4>
+        <div className="grid gap-3 sm:grid-cols-2">
           <CurrencyInput<FormData>
             label="Revenue Month -1"
             name="sectionB.revenueMonthMinus1"
@@ -284,7 +284,7 @@ export function SectionB({ register, errors, setValue, watch }: Props) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-3 space-y-1.5">
         <CalculatedField
           label="Monthly Revenue"
           value={formatCurrency(metrics.revenue.monthlyRevenue)}

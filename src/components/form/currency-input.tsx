@@ -21,17 +21,17 @@ export function CurrencyInput<T extends FieldValues>({
 }: CurrencyInputProps<T>) {
   return (
     <div className="space-y-1">
-      <Label htmlFor={name} className="text-sm">
+      <Label htmlFor={name} className="text-xs text-muted-foreground">
         {label}
       </Label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">$</span>
         <Input
           id={name}
           type="number"
           step="0.01"
           min="0"
-          className="pl-7"
+          className="pl-7 h-8"
           placeholder={placeholder}
           {...register(name, { valueAsNumber: true })}
         />

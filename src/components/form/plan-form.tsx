@@ -51,8 +51,8 @@ export function PlanForm() {
   return (
     <ScrollArea className="h-full">
       <div className="p-4 pb-8 space-y-2">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-semibold">Business Plan</h2>
+        <div className="flex items-center justify-between border-b pb-3 -mx-4 px-4 mb-1">
+          <h2 className="text-sm font-semibold">Business Plan</h2>
           <span className="text-xs text-muted-foreground">
             {isDirty ? 'Unsaved changes' : lastSavedAt ? `Saved ${lastSavedAt.toLocaleTimeString()}` : ''}
           </span>

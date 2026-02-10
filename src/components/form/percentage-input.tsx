@@ -21,7 +21,7 @@ export function PercentageInput<T extends FieldValues>({
 }: PercentageInputProps<T>) {
   return (
     <div className="space-y-1">
-      <Label htmlFor={name} className="text-sm">
+      <Label htmlFor={name} className="text-xs text-muted-foreground">
         {label}
       </Label>
       <div className="relative">
@@ -31,11 +31,11 @@ export function PercentageInput<T extends FieldValues>({
           step="0.1"
           min="0"
           max="100"
-          className="pr-7"
+          className="pr-7 h-8"
           placeholder={placeholder}
           {...register(name, { valueAsNumber: true })}
         />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">%</span>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">%</span>
       </div>
       {error && <p className="text-xs text-red-500">{error}</p>}
     </div>

@@ -22,8 +22,8 @@ export function BreakEvenBar() {
   const isProfitable = revenue >= breakEvenRevenue;
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-semibold">Break-Even Analysis</h3>
+    <div className="space-y-2">
+      <h3 className="text-xs font-semibold">Break-Even Analysis</h3>
 
       <div className="space-y-2">
         <div>
@@ -31,7 +31,7 @@ export function BreakEvenBar() {
             <span>Revenue</span>
             <span className="font-medium">{formatCurrency(revenue)}</span>
           </div>
-          <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-500 ${isProfitable ? 'bg-green-500' : 'bg-red-500'}`}
               style={{ width: `${revenueWidth}%` }}
@@ -44,7 +44,7 @@ export function BreakEvenBar() {
             <span>Break-Even</span>
             <span className="font-medium">{formatCurrency(breakEvenRevenue)}</span>
           </div>
-          <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-gray-400 rounded-full transition-all duration-500"
               style={{ width: `${breakEvenWidth}%` }}
@@ -53,12 +53,12 @@ export function BreakEvenBar() {
         </div>
       </div>
 
-      <div className={`text-sm font-medium ${isProfitable ? 'text-green-600' : 'text-red-600'}`}>
+      <div className={`text-xs font-medium ${isProfitable ? 'text-green-600' : 'text-red-600'}`}>
         Margin of Safety: {formatPercent(marginOfSafety)}
         {isProfitable ? ' above break-even' : ' below break-even'}
       </div>
 
-      <div className="text-xs text-muted-foreground">
+      <div className="text-[10px] text-muted-foreground">
         Break-even at {formatCurrency(metrics.breakEven.breakEvenRevenue)} ({Math.ceil(metrics.breakEven.breakEvenUnits)} units)
       </div>
     </div>

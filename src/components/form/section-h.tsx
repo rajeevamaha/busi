@@ -29,7 +29,7 @@ export function SectionH({ register, errors, setValue, watch }: Props) {
 
   return (
     <SectionWrapper title="H. Investment & Capital" description="Startup investment and funding">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <CurrencyInput<FormData>
           label="Total Initial Investment"
           name="sectionH.totalInitialInvestment"
@@ -37,9 +37,9 @@ export function SectionH({ register, errors, setValue, watch }: Props) {
           error={errors.sectionH?.totalInitialInvestment?.message}
         />
         <div className="space-y-1">
-          <Label className="text-sm">Funding Source</Label>
+          <Label className="text-xs text-muted-foreground">Funding Source</Label>
           <Select value={fundingSource} onValueChange={(v) => setValue('sectionH.fundingSource', v)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-8">
               <SelectValue placeholder="Select source" />
             </SelectTrigger>
             <SelectContent>
@@ -69,7 +69,7 @@ export function SectionH({ register, errors, setValue, watch }: Props) {
       </div>
 
       {metrics.trends.paybackPeriod > 0 && (
-        <div className="mt-4">
+        <div className="mt-3">
           <CalculatedField
             label="Payback Period"
             value={`${metrics.trends.paybackPeriod.toFixed(1)} months`}
