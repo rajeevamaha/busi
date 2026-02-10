@@ -20,6 +20,8 @@ export function CostDonutChart() {
     { name: 'Profit', value: Math.max(0, metrics.profitability.netProfit) },
   ].filter((d) => d.value > 0);
 
+  const total = data.reduce((sum, d) => sum + d.value, 0);
+
   if (data.length === 0 || metrics.revenue.totalRevenue === 0) {
     return (
       <div className="flex h-[250px] items-center justify-center text-sm text-muted-foreground">
@@ -51,7 +53,10 @@ export function CostDonutChart() {
           <Legend
             verticalAlign="bottom"
             height={36}
-            formatter={(value: string) => <span className="text-xs">{value}</span>}
+            formatter={(value: string, entry) => {
+              const pct = total > 0 ? ((entry.payload?.value ?? 0) / total * 100).toFixed(1) : '0';
+              return <span className="text-xs">{value} {pct}%</span>;
+            }}
           />
         </PieChart>
       </ResponsiveContainer>
