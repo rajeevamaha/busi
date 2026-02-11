@@ -90,6 +90,32 @@ const guides: Guide[] = [
       'Forecast demand based on day-of-week patterns to reduce overproduction',
     ],
   },
+  {
+    title: 'Break-Even: Know Your Survival Number',
+    category: 'Finance',
+    description: 'Break-even tells you exactly how much you need to sell just to cover costs. Every dollar above it is profit.',
+    tips: [
+      'Break-Even Revenue = Fixed Costs / (1 - Variable Cost %)',
+      'Know your fixed costs cold: rent, insurance, loan payments, subscriptions',
+      'Variable costs scale with sales: ingredients, packaging, commissions',
+      'Aim for a Margin of Safety above 25% — that\'s your cushion for slow months',
+      'Recalculate break-even whenever you change prices or add fixed costs',
+      'If break-even feels impossible, cut fixed costs before cutting prices',
+    ],
+  },
+  {
+    title: 'Cash Flow vs. Profit: Why You Can Be Profitable and Still Go Broke',
+    category: 'Finance',
+    description: 'Profit is an accounting number. Cash flow is what pays your bills. Many profitable businesses fail because they run out of cash.',
+    tips: [
+      'Track cash in and cash out weekly, not just profit on paper',
+      'Supplier payment terms matter — negotiate 30-day terms instead of COD',
+      'Keep 2-3 months of operating expenses as a cash reserve',
+      'Seasonal dips can drain cash even if annual profit is healthy',
+      'Big upfront purchases (equipment, deposits) don\'t show as monthly losses but still drain cash',
+      'Invoice promptly for catering/wholesale orders — delayed payments hurt cash flow',
+    ],
+  },
 ];
 
 const categoryColors: Record<string, string> = {
@@ -99,6 +125,7 @@ const categoryColors: Record<string, string> = {
   Labor: 'bg-blue-100 text-blue-800',
   Rent: 'bg-purple-100 text-purple-800',
   Operations: 'bg-orange-100 text-orange-800',
+  Finance: 'bg-teal-100 text-teal-800',
 };
 
 export function ResourcesPage() {
