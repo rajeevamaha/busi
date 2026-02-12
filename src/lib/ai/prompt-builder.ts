@@ -1,5 +1,7 @@
 import { FormData, AllMetrics, Alert, CompoundInsight, isSoloOrFamily } from '@/lib/engine/types';
 import { formatCurrency, formatPercent } from '@/lib/utils';
+import { getRoleConfig } from './roles';
+import type { AgentRole } from './tools';
 
 export function buildSystemPrompt(
   formData: FormData,
@@ -71,4 +73,52 @@ Guidelines:
 - If the user asks about something not in the data, say so and suggest what input they need to add
 - Focus on the most impactful changes first
 `;
+}
+
+export function buildAgentSystemPrompt(
+  formData: FormData,
+  metrics: AllMetrics,
+  alerts: Alert[],
+  insights: CompoundInsight[],
+  role: AgentRole = 'ceo',
+  isOnboarding: boolean = false
+): string {
+  const roleConfig = getRoleConfig(role);
+  const basePrompt = buildSystemPrompt(formData, metrics, alerts, insights);
+
+  const roleSection = `
+## Your Role: ${roleConfig.label}
+${roleConfig.systemPromptFocus}
+`;
+
+  const toolGuidelines = `
+## Tool Usage Guidelines
+- When the user provides data (numbers, names, settings), use the updateBusinessPlan tool to save it immediately
+- After updating data, briefly confirm what was saved and mention the impact on health score
+- When asked about metrics, use getMetrics to get current calculated values
+- For "what if" questions, use runScenario to show before/after comparison
+- For benchmark questions, use searchBenchmarks to look up industry standards
+- For alert/problem questions, use getAlerts to get current issues
+- Always explain tool results in plain language — don't just dump numbers
+- If a tool call fails, explain the error and ask for corrected input
+`;
+
+  const onboardingSection = isOnboarding ? `
+## Onboarding Mode
+You are helping a new user set up their business plan. Ask 2-3 questions at a time, starting with the most important sections for the ${roleConfig.label} perspective.
+
+Section priority for this role: ${roleConfig.onboardingPriority.join(' → ')}
+
+After each answer, use updateBusinessPlan to save the data. Confirm what was saved and show the health score impact. Then ask the next set of questions.
+
+Keep the conversation natural and encouraging. Accept approximate values ("about $2000") and fill reasonable numbers. Suggest smart defaults based on the business type when the user isn't sure.
+
+Track which sections still need data and guide the user through all of them.
+` : '';
+
+  return `${basePrompt}
+
+${roleSection}
+${toolGuidelines}
+${onboardingSection}`;
 }

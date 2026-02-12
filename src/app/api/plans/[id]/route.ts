@@ -46,6 +46,8 @@ export async function PUT(
       ...(body.name !== undefined && { name: body.name }),
       ...(body.businessType !== undefined && { businessType: body.businessType }),
       ...(body.formData !== undefined && { formData: body.formData }),
+      ...(body.role !== undefined && { role: body.role }),
+      ...(body.onboardingComplete !== undefined && { onboardingComplete: body.onboardingComplete }),
     },
   });
 

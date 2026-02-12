@@ -13,10 +13,14 @@ import { runRules } from '@/lib/engine/rules';
 import { runCompoundRules } from '@/lib/engine/compound-rules';
 import { calculateScenario } from '@/lib/engine/scenarios';
 
+type AgentRole = 'ceo' | 'cfo' | 'chef' | 'manager';
+
 interface BusinessPlanState {
   // Plan metadata
   planId: string | null;
   planName: string;
+  role: AgentRole;
+  isOnboarding: boolean;
 
   // Form data
   formData: FormData;
@@ -38,13 +42,15 @@ interface BusinessPlanState {
   // Actions
   setPlanId: (id: string) => void;
   setPlanName: (name: string) => void;
+  setRole: (role: AgentRole) => void;
+  setIsOnboarding: (v: boolean) => void;
   setFormData: (data: FormData) => void;
   updateSection: <K extends keyof FormData>(section: K, data: Partial<FormData[K]>) => void;
   recalculate: () => void;
   setScenarioOverrides: (overrides: ScenarioOverrides) => void;
   clearScenario: () => void;
   markSaved: () => void;
-  loadPlan: (id: string, name: string, formData: FormData) => void;
+  loadPlan: (id: string, name: string, formData: FormData, role?: AgentRole, isOnboarding?: boolean) => void;
   reset: () => void;
 }
 
@@ -63,6 +69,8 @@ const initialComputed = computeAll(defaultFormData);
 export const useBusinessPlanStore = create<BusinessPlanState>((set, get) => ({
   planId: null,
   planName: 'Untitled Plan',
+  role: 'ceo' as AgentRole,
+  isOnboarding: false,
   formData: defaultFormData,
   metrics: initialComputed.metrics,
   alerts: initialComputed.alerts,
@@ -75,6 +83,8 @@ export const useBusinessPlanStore = create<BusinessPlanState>((set, get) => ({
 
   setPlanId: (id) => set({ planId: id }),
   setPlanName: (name) => set({ planName: name, isDirty: true }),
+  setRole: (role) => set({ role }),
+  setIsOnboarding: (isOnboarding) => set({ isOnboarding }),
 
   setFormData: (data) => {
     const computed = computeAll(data);
@@ -122,11 +132,13 @@ export const useBusinessPlanStore = create<BusinessPlanState>((set, get) => ({
 
   markSaved: () => set({ isDirty: false, lastSavedAt: new Date() }),
 
-  loadPlan: (id, name, formData) => {
+  loadPlan: (id, name, formData, role = 'ceo', isOnboarding = false) => {
     const computed = computeAll(formData);
     set({
       planId: id,
       planName: name,
+      role,
+      isOnboarding,
       formData,
       ...computed,
       isDirty: false,
@@ -142,6 +154,8 @@ export const useBusinessPlanStore = create<BusinessPlanState>((set, get) => ({
     set({
       planId: null,
       planName: 'Untitled Plan',
+      role: 'ceo' as AgentRole,
+      isOnboarding: false,
       formData: defaultFormData,
       ...computed,
       isDirty: false,

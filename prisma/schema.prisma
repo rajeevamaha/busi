@@ -18,16 +18,19 @@ model User {
 }
 
 model BusinessPlan {
-  id           String        @id @default(cuid())
-  userId       String
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name         String
-  businessType String        @default("bakery")
-  formData     Json          @default("{}")
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  chatMessages ChatMessage[]
-  recipes      Recipe[]
+  id                 String            @id @default(cuid())
+  userId             String
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name               String
+  businessType       String            @default("bakery")
+  formData           Json              @default("{}")
+  role               String            @default("ceo")
+  onboardingComplete Boolean           @default(false)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  chatMessages       ChatMessage[]
+  recipes            Recipe[]
+  agentActivities    AgentActivity[]
 
   @@index([userId])
 }
@@ -60,6 +63,22 @@ model ChatMessage {
   role      String       // "user" or "assistant"
   content   String
   modelUsed String?      // "haiku" or "sonnet"
+  toolCalls Json?
+  metadata  Json?
+  createdAt DateTime     @default(now())
+
+  @@index([planId])
+}
+
+model AgentActivity {
+  id        String       @id @default(cuid())
+  planId    String
+  plan      BusinessPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  type      String       // 'tool_call', 'proactive_insight', 'onboarding_step'
+  toolName  String?
+  input     Json?
+  output    Json?
+  model     String?
   createdAt DateTime     @default(now())
 
   @@index([planId])

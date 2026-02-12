@@ -25,7 +25,7 @@ export default function NewPlanPage() {
 
       if (res.ok) {
         const data = await res.json();
-        router.replace(`/plan/${data.plan.id}`);
+        router.replace(`/plan/${data.plan.id}?onboarding=true`);
       } else {
         router.push('/dashboard');
       }

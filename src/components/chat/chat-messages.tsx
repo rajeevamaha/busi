@@ -2,17 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 import type { UIMessage } from 'ai';
+import { ToolActivity } from './tool-activity';
+import { ToolResultCard } from './tool-result-card';
 
 interface ChatMessagesProps {
   messages: UIMessage[];
   isLoading: boolean;
-}
-
-function getMessageText(message: UIMessage): string {
-  return message.parts
-    .filter((part): part is Extract<typeof part, { type: 'text' }> => part.type === 'text')
-    .map((part) => part.text)
-    .join('');
 }
 
 export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
@@ -30,9 +25,9 @@ export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
             Ask me anything about your business plan.
           </p>
           <div className="space-y-1 text-xs text-muted-foreground">
-            <p>&ldquo;Is my rent too high?&rdquo;</p>
-            <p>&ldquo;How can I improve my margins?&rdquo;</p>
+            <p>&ldquo;Set my monthly rent to $2000&rdquo;</p>
             <p>&ldquo;What if I raise prices by 10%?&rdquo;</p>
+            <p>&ldquo;Show me my alerts&rdquo;</p>
           </div>
         </div>
       </div>
@@ -42,22 +37,57 @@ export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {messages.map((m) => (
-        <div
-          key={m.id}
-          className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
-        >
-          <div
-            className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-              m.role === 'user'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted'
-            }`}
-          >
-            <div className="whitespace-pre-wrap">{getMessageText(m)}</div>
-          </div>
+        <div key={m.id}>
+          {m.role === 'user' ? (
+            <div className="flex justify-end">
+              <div className="max-w-[85%] rounded-lg px-3 py-2 text-sm bg-primary text-primary-foreground">
+                <div className="whitespace-pre-wrap">
+                  {m.parts
+                    .filter((p): p is Extract<typeof p, { type: 'text' }> => p.type === 'text')
+                    .map((p) => p.text)
+                    .join('')}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex justify-start">
+              <div className="max-w-[85%] space-y-2">
+                {m.parts.map((part, i) => {
+                  if (part.type === 'text' && 'text' in part && part.text) {
+                    return (
+                      <div key={i} className="bg-muted rounded-lg px-3 py-2 text-sm whitespace-pre-wrap">
+                        {part.text}
+                      </div>
+                    );
+                  }
+                  if (part.type === 'tool-invocation' && 'toolInvocation' in part) {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const inv = (part as any).toolInvocation;
+                    if (inv.state === 'result') {
+                      return (
+                        <ToolResultCard
+                          key={i}
+                          toolName={inv.toolName}
+                          result={inv.result as Record<string, unknown>}
+                        />
+                      );
+                    }
+                    return (
+                      <ToolActivity
+                        key={i}
+                        toolName={inv.toolName}
+                        state={inv.state}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          )}
         </div>
       ))}
-      {isLoading && (
+      {isLoading && messages[messages.length - 1]?.role === 'user' && (
         <div className="flex justify-start">
           <div className="bg-muted rounded-lg px-3 py-2 text-sm">
             <div className="flex space-x-1">
