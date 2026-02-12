@@ -26,7 +26,12 @@ export function AgentChatPanel({ initialMessage }: AgentChatPanelProps) {
     body: { planId, role },
   }), [planId, role]);
 
-  const { messages, sendMessage, status } = useChat({ transport });
+  const { messages, sendMessage, status, error } = useChat({
+    transport,
+    onError: (err) => {
+      console.error('[Agent Chat Error]', err);
+    },
+  });
 
   const isLoading = status === 'submitted' || status === 'streaming';
 
@@ -88,6 +93,11 @@ export function AgentChatPanel({ initialMessage }: AgentChatPanelProps) {
       </div>
 
       <ChatMessages messages={messages} isLoading={isLoading} />
+      {error && (
+        <div className="mx-4 mb-2 p-2 rounded bg-red-50 border border-red-200 text-xs text-red-600">
+          Error: {error.message || 'Something went wrong. Please try again.'}
+        </div>
+      )}
       <ChatInput onSend={handleSend} isLoading={isLoading} />
     </div>
   );

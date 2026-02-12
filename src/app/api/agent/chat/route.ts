@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { streamText, createUIMessageStreamResponse, stepCountIs } from 'ai';
+import { streamText, createUIMessageStreamResponse, stepCountIs, convertToModelMessages } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { groq } from '@ai-sdk/groq';
 import { withAuth, isAuthError } from '@/lib/middleware';
@@ -18,7 +18,17 @@ export async function POST(req: NextRequest) {
   const auth = await withAuth(req);
   if (isAuthError(auth)) return auth;
 
-  const { messages, planId, role = 'ceo' } = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(
+      JSON.stringify({ error: 'Invalid request body' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  const { messages, planId, role = 'ceo' } = body;
 
   if (!planId) {
     return new Response(
@@ -27,18 +37,45 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Convert UIMessages to simple format for routing
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const coreMessages = messages.map((msg: any) => ({
-    role: msg.role as 'user' | 'assistant',
-    content: msg.parts
-      ?.filter((p: { type: string }) => p.type === 'text')
-      .map((p: { text: string }) => p.text)
-      .join('') || msg.content || '',
-  }));
+  // Convert UIMessages to model messages (properly handles tool calls/results)
+  let modelMessages;
+  try {
+    modelMessages = await convertToModelMessages(messages, {
+      ignoreIncompleteToolCalls: true,
+    });
+  } catch (err) {
+    console.error('[Agent] Message conversion error:', err);
+    // Fallback: extract text-only messages
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    modelMessages = messages.map((msg: any) => ({
+      role: msg.role as 'user' | 'assistant',
+      content: msg.parts
+        ?.filter((p: { type: string }) => p.type === 'text')
+        .map((p: { text: string }) => p.text)
+        .join('') || msg.content || '',
+    })).filter((m: { content: string }) => m.content.length > 0);
+  }
 
-  const lastUserText = coreMessages.filter((m: { role: string }) => m.role === 'user').pop()?.content || '';
-  const useTools = shouldUseTools(coreMessages);
+  // Extract last user text for routing and saving
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const lastUserText = messages
+    .filter((m: any) => m.role === 'user')
+    .pop()?.parts
+    ?.filter((p: { type: string }) => p.type === 'text')
+    .map((p: { text: string }) => p.text)
+    .join('') || '';
+
+  const useTools = shouldUseTools(
+    // Simple format for routing check only
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    messages.map((msg: any) => ({
+      role: msg.role as string,
+      content: msg.parts
+        ?.filter((p: { type: string }) => p.type === 'text')
+        .map((p: { text: string }) => p.text)
+        .join('') || '',
+    }))
+  );
 
   // Rate limit agent interactions
   if (useTools) {
@@ -90,7 +127,7 @@ export async function POST(req: NextRequest) {
     const result = streamText({
       model: anthropic('claude-sonnet-4-5-20250929'),
       system: systemPrompt,
-      messages: coreMessages,
+      messages: modelMessages,
       tools,
       stopWhen: stepCountIs(5),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,7 +175,7 @@ export async function POST(req: NextRequest) {
     const result = streamText({
       model: groq(modelId),
       system: systemPrompt,
-      messages: coreMessages,
+      messages: modelMessages,
     });
 
     prisma.chatMessage.create({
