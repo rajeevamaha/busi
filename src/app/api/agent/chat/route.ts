@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 import { streamText, createUIMessageStreamResponse, stepCountIs, convertToModelMessages } from 'ai';
-import { anthropic } from '@ai-sdk/anthropic';
 import { groq } from '@ai-sdk/groq';
 import { withAuth, isAuthError } from '@/lib/middleware';
 import { prisma } from '@/lib/db';
@@ -119,13 +118,17 @@ export async function POST(req: NextRequest) {
     formData, metrics, alerts, insights, agentRole, isOnboarding
   );
 
+  // All interactions use Groq (free tier)
+  // Tool-calling uses llama-3.3-70b-versatile which supports function calling
+  const AGENT_MODEL = 'llama-3.3-70b-versatile';
+
   if (useTools) {
-    // Agent mode: Claude with tools
+    // Agent mode: Groq with tools
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tools = createToolsForRole(planId, auth.user.id, agentRole) as any;
 
     const result = streamText({
-      model: anthropic('claude-sonnet-4-5-20250929'),
+      model: groq(AGENT_MODEL),
       system: systemPrompt,
       messages: modelMessages,
       tools,
@@ -145,7 +148,7 @@ export async function POST(req: NextRequest) {
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   toolResults?.find((tr: any) => tr.toolCallId === tc.toolCallId)?.result ?? null
                 )),
-                model: 'claude-sonnet-4-5',
+                model: AGENT_MODEL,
               },
             }).catch(console.error);
           }
@@ -159,7 +162,7 @@ export async function POST(req: NextRequest) {
         planId,
         role: 'user',
         content: lastUserText,
-        modelUsed: 'claude-sonnet',
+        modelUsed: AGENT_MODEL,
         metadata: { role: agentRole, agentMode: true },
       },
     }).catch(console.error);
